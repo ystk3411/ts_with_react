@@ -111,7 +111,7 @@ function UserList() {
     )
   }
 
-  const CustomToggle = (eventKey:any ) => {
+  const CustomToggle = ({ eventKey }:any ) => {
     const decoratedOnClick = useAccordionButton(eventKey, () =>
       console.log('totally custom!'),
     );
@@ -146,7 +146,6 @@ function UserList() {
           <Accordion.Collapse eventKey="1" role="">
             <Card.Body>
               <FormCommon users={users} setUsers={setUsers} students={students} setStudents={setStudents} mentors={mentors} setMentors={setMentors}/>
-              
             </Card.Body>
           </Accordion.Collapse>
       </Accordion>

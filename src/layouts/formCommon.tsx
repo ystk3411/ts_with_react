@@ -43,7 +43,7 @@ function FormCommon(props:{users:UserType[], setUsers: Dispatch<SetStateAction<U
     <Form noValidate validated={validated}>
       <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
         <Form.Label>名前</Form.Label>
-        <Form.Control type="text" name="name" onChange={onChange} required />
+        <Form.Control type="text" name="name" onChange={onChange} required/>
         <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         <Form.Control.Feedback type="invalid">項目を入力してください</Form.Control.Feedback>
       </Form.Group>
