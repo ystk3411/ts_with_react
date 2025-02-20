@@ -9,16 +9,15 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import Table from 'react-bootstrap/Table';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import FormCommon from './layouts/formCommon.tsx'
+import FormCommon from './layouts/formCommon'
 
 function UserList() {
   interface User {
-    [key: string]: string | string[] | number 
+    [key: string]: string | string[] | number | object
   }
-  const [users, setUsers] = useState<User>([])
-  const [students, setStudents] = useState<User>([])
-  const [mentors, setMentors] = useState<User>([])
-  const [inputStudent,setInputStudent] = useState<User>()
+  const [users, setUsers] = useState<User[]>([])
+  const [students, setStudents] = useState<User[]>([])
+  const [mentors, setMentors] = useState<User[]>([])
   const USER_LIST:User[] = [
     { id: 1, name: "鈴木太郎", role: "student", email: "test1@happiness.com", age: 26, postCode: "100-0003", phone: "0120000001", hobbies: ["旅行", "食べ歩き", "サーフィン"], url: "https://aaa.com", studyMinutes: 3000, taskCode: 101, studyLangs: ["Rails", "Javascript"], score: 68 },
     { id: 2, name: "鈴木二郎", role: "mentor", email: "test2@happiness.com", age: 31, postCode: "100-0005", phone: "0120000002", hobbies: ["サッカー", "ランニング", "筋トレ"], url: "https://bbb.com", experienceDays: 1850, useLangs: ["Next.js", "GoLang"], availableStartCode: 201, availableEndCode: 302 },
@@ -31,32 +30,32 @@ function UserList() {
   ]
 
   const students_sort_by_studyMinutes_asc = () =>{
-    students.sort((a:User,b:User) => a.studyMinutes - b.studyMinutes)
+    students.sort((a:User,b:User) => Number(a.studyMinutes) - Number(b.studyMinutes))
     setStudents([...students])
   }
 
   const students_sort_by_studyMinutes_desc = () =>{
-    students.sort((a:User,b:User) => b.studyMinutes - a.studyMinutes)
+    students.sort((a:User,b:User) => Number(b.studyMinutes) - Number(a.studyMinutes))
     setStudents([...students])
   }
 
   const students_sort_by_score_asc = () =>{
-    students.sort((a:User,b:User) => a.score - b.score)
+    students.sort((a:User,b:User) => Number(a.score) - Number(b.score))
     setStudents([...students])
   }
 
   const students_sort_by_score_desc = () =>{
-    students.sort((a:User,b:User) => b.score - a.score)
+    students.sort((a:User,b:User) => Number(b.score) - Number(a.score))
     setStudents([...students])
   }
 
   const mentors_sort_by_experienceDays_asc = () =>{
-    mentors.sort((a:User,b:User) => a.experienceDays - b.experienceDays)
+    mentors.sort((a:User,b:User) => Number(a.experienceDays) - Number(b.experienceDays))
     setStudents([...students])
   }
 
   const mentors_sort_by_experienceDays_desc = () =>{
-    mentors.sort((a:User,b:User) => b.experienceDays - a.experienceDays)
+    mentors.sort((a:User,b:User) => Number(b.experienceDays) - Number(a.experienceDays))
     setStudents([...students])
   }
 
@@ -112,7 +111,7 @@ function UserList() {
     )
   }
 
-  const CustomToggle = ({ eventKey }) => {
+  const CustomToggle = (eventKey:any ) => {
     const decoratedOnClick = useAccordionButton(eventKey, () =>
       console.log('totally custom!'),
     );
@@ -122,7 +121,7 @@ function UserList() {
     );
   }
 
-  const studentList = ({user}:User) => {
+  const studentList = (user:User) => {
     if(user.role == "mentor"){
       const userList = students.filter((student:User) => {
           return user.availableStartCode <= student.taskCode && student.taskCode <= user.availableEndCode 
@@ -131,7 +130,7 @@ function UserList() {
     }
   }
 
-  const mentorList = ({user}:User) => {
+  const mentorList = (user:User) => {
     if(user.role == "student"){
       const userList = mentors.filter((mentor:User) => {
           return mentor.availableStartCode <= user.taskCode &&  user.taskCode <= mentor.availableEndCode 
@@ -144,8 +143,11 @@ function UserList() {
     <>
       <Accordion defaultActiveKey="0">
           <CustomToggle eventKey="1">Click me!</CustomToggle>
-          <Accordion.Collapse eventKey="1">
-            <Card.Body><FormCommon inputStudent={inputStudent} setInputStudent={setInputStudent} users={users} setUsers={setUsers} students={students} setStudents={setStudents} mentors={mentors} setMentors={setMentors}/></Card.Body>
+          <Accordion.Collapse eventKey="1" role="">
+            <Card.Body>
+              <FormCommon users={users} setUsers={setUsers} students={students} setStudents={setStudents} mentors={mentors} setMentors={setMentors}/>
+              
+            </Card.Body>
           </Accordion.Collapse>
       </Accordion>
       <Tabs
@@ -163,7 +165,7 @@ function UserList() {
               </tr>
             </thead>
             <tbody>
-            {users.map((user:User) => (
+            {users.map((user:any) => (
               <tr>
                 <td>{user.name}</td>
                 <td>{user.role}</td>
@@ -172,7 +174,7 @@ function UserList() {
                 <td>{user.postCode}</td>
                 <td>{user.phone}</td>
                 <td>
-                  {user.hobbies?.map((hobbie:User) => (
+                  {user.hobbies?.map((hobbie:string) => (
                     <div>{hobbie}</div>
                   ))}
                 </td>
@@ -180,26 +182,26 @@ function UserList() {
                 <td>{user.studyMinutes}</td>
                 <td>{user.taskCode}</td>
                 <td>
-                  {user.studyLangs?.map((lang:User) => (
+                  {user.studyLangs?.map((lang:string) => (
                     <div>{lang}</div>
                   ))}
                 </td>
                 <td>{user.score}</td>
                 <td>
-                  {mentorList({user})?.map((data:User) => (
+                  {mentorList({user})?.map(({data}:any) => (
                     <div>{data.name}</div>
                   ))}
                 </td>
                 <td>{user.experienceDays}</td>
                 <td>
-                  {user.useLangs?.map((lang:User) => (
+                  {user.useLangs?.map((lang:string) => (
                     <div>{lang}</div>
                   ))}
                 </td>
                 <td>{user.availableStartCode}</td>
                 <td>{user.availableEndCode}</td>
                 <td>
-                  {studentList({user})?.map((data:User) => (
+                  {studentList(user)?.map((data:any) => (
                     <div>{data.name}</div>
                   ))}
                 </td>
@@ -228,7 +230,7 @@ function UserList() {
               </tr>
             </thead>
             <tbody>
-            {students.map((user1:User) => (
+            {students.map((user1:any) => (
               <tr key={user1.id}>
                 <td>{user1.name}</td>
                 <td>{user1.role}</td>
@@ -237,7 +239,7 @@ function UserList() {
                 <td>{user1.postCode}</td>
                 <td>{user1.phone}</td>
                 <td>
-                  {user1.hobbies?.map((hobbie:User) => (
+                  {user1.hobbies?.map((hobbie:string) => (
                     <div>{hobbie}</div>
                   ))}
                 </td>
@@ -245,14 +247,14 @@ function UserList() {
                 <td>{user1.studyMinutes}</td>
                 <td>{user1.taskCode}</td>
                 <td>
-                  {user1.studyLangs?.map((lang:User) => (
+                  {user1.studyLangs?.map((lang:string) => (
                     <div>{lang}</div>
                   ))}
                 </td>
                 <td>{user1.score}</td>
                 <td>
                   {mentors.filter((user2:User) => 
-                    {return user2.availableStartCode <= user1.taskCode &&  user1.taskCode <= user2.availableEndCode}).map((data:User) => (
+                    {return user2.availableStartCode <= user1.taskCode &&  user1.taskCode <= user2.availableEndCode}).map((data:any) => (
                       <div>{data.name}</div>
                     ))}
                 </td>
@@ -277,7 +279,7 @@ function UserList() {
               </tr>
             </thead>
             <tbody>
-            {mentors.map((user1:User) => (
+            {mentors.map((user1:any) => (
               <tr>
                 <td>{user1.name}</td>
                 <td>{user1.role}</td>
@@ -286,14 +288,14 @@ function UserList() {
                 <td>{user1.postCode}</td>
                 <td>{user1.phone}</td>
                 <td>
-                  {user1.hobbies?.map((hobbie:User) => (
+                  {user1.hobbies?.map((hobbie:string) => (
                     <div>{hobbie}</div>
                   ))}
                 </td>
                 <td>{user1.url}</td>
                 <td>{user1.experienceDays}</td>
                 <td>
-                  {user1.useLangs?.map((lang:User) => (
+                  {user1.useLangs?.map((lang:string) => (
                     <div>{lang}</div>
                   ))}
                 </td>
@@ -301,7 +303,7 @@ function UserList() {
                 <td>{user1.availableEndCode}</td>
                 <td>
                   {students.filter((user2:User) => 
-                    {return user1.availableStartCode <= user2.taskCode && user2.taskCode <= user1.availableEndCode }).map((data:User) => (
+                    {return user1.availableStartCode <= user2.taskCode && user2.taskCode <= user1.availableEndCode }).map((data:any) => (
                       <div>{data.name}</div>
                     ))}
                 </td>
