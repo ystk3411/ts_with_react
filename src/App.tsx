@@ -11,7 +11,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/index" element={<UserList/>} />
+          <Route path="/ts_with_react" element={<UserList/>} />
         </Routes>
       </BrowserRouter>
     </>
